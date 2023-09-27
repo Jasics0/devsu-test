@@ -29,7 +29,7 @@ public class TransactionController {
     @GetMapping("/{idTransaction}")
     public ResponseEntity<ResponseDTO> findByIdTransaction(@PathVariable Long idTransaction) {
 
-        TransactionDTO transaction = WebTransactionMapper.toDTO(transactionService.findByIdTransaction(idTransaction));
+        TransactionSimpleDTO transaction = WebTransactionMapper.toSimpleDTO(transactionService.findByIdTransaction(idTransaction));
 
         return new ResponseEntity<>(new ResponseDTO<>(transaction, "Transaction found successfully"), org.springframework.http.HttpStatus.OK);
     }
