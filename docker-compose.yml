@@ -8,12 +8,13 @@ services:
       MYSQL_DATABASE: devsu
       MYSQL_USER: devsu
       MYSQL_PASSWORD: devsu
-
+    ports:
+      - "3308:3306"
     volumes:
       - ./data:/var/lib/mysql
       - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -27,7 +28,7 @@ services:
       - "15672:15672"
       - "5672:5672"
     healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
+      test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -37,7 +38,7 @@ services:
 
   transactions-service:
     image: transactions
-    build: 
+    build:
       context: ./transactions
       dockerfile: Dockerfile
     ports:
@@ -45,7 +46,7 @@ services:
     networks:
       - devsu-network
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devsu?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devsu?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=devsu
       - SPRING_DATASOURCE_PASSWORD=devsu
       - SPRING_RABBITMQ_HOST=queue
@@ -53,13 +54,13 @@ services:
       - SPRING_RABBITMQ_USERNAME=guest
       - SPRING_RABBITMQ_PASSWORD=guest
     depends_on:
-        - db
-        - queue
+      - db
+      - queue
     container_name: transactions-service
 
   clients-service:
     image: clients
-    build: 
+    build:
       context: ./clients
       dockerfile: Dockerfile
     ports:
@@ -67,7 +68,7 @@ services:
     networks:
       - devsu-network
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devsu?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devsu?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=devsu
       - SPRING_DATASOURCE_PASSWORD=devsu
       - SPRING_RABBITMQ_HOST=queue
@@ -75,9 +76,9 @@ services:
       - SPRING_RABBITMQ_USERNAME=guest
       - SPRING_RABBITMQ_PASSWORD=guest
     depends_on:
-        - db
-        - queue
-        - transactions-service
+      - db
+      - queue
+      - transactions-service
     container_name: clients-service
 
 networks:
