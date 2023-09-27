@@ -2,11 +2,13 @@ package com.devsu.transactions.infrastructure.repositories.impl;
 
 import com.devsu.transactions.domain.model.Account;
 import com.devsu.transactions.domain.ports.out.IAccountRepository;
+import com.devsu.transactions.global.exceptions.DevsuException;
 import com.devsu.transactions.infrastructure.entities.AccountEntity;
 import com.devsu.transactions.infrastructure.entities.enums.AccountTypeEntity;
 import com.devsu.transactions.infrastructure.mappers.InfraAccountMapper;
 import com.devsu.transactions.infrastructure.repositories.jpa.JpaAccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,12 +23,18 @@ public class AccountRepository implements IAccountRepository {
     @Override
     public Account save(Account account) {
 
-        AccountEntity accountEntity = InfraAccountMapper.toEntity(account);
+        try {
+            AccountEntity accountEntity = InfraAccountMapper.toEntity(account);
 
-        AccountEntity accountEntitySaved = jpaAccountRepository.save(accountEntity);
+            AccountEntity accountEntitySaved = jpaAccountRepository.save(accountEntity);
 
-        return InfraAccountMapper.toDomain(accountEntitySaved);
-
+            return InfraAccountMapper.toDomain(accountEntitySaved);
+        }catch (DataIntegrityViolationException e){
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_ALREADY_EXISTS);
+        }
+        catch (Exception e){
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_CREATED);
+        }
     }
 
     @Override
@@ -35,7 +43,7 @@ public class AccountRepository implements IAccountRepository {
         Optional<AccountEntity> accountEntity = jpaAccountRepository.findActiveAccountByIdAccount(idAccount);
 
         if (accountEntity.isEmpty()) {
-            return null;
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_FOUND);
         }
 
         AccountEntity accountEntityFound = accountEntity.get();
@@ -49,7 +57,7 @@ public class AccountRepository implements IAccountRepository {
         List<AccountEntity> listAccount = jpaAccountRepository.findActiveAccountsByIdPerson(idPerson);
 
         if (listAccount.isEmpty()) {
-            return null;
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_FOUND);
         }
 
         return InfraAccountMapper.toDomainList(listAccount);
@@ -62,7 +70,7 @@ public class AccountRepository implements IAccountRepository {
         Optional<AccountEntity> accountEntity = jpaAccountRepository.findById(idAccount);
 
         if (accountEntity.isEmpty()) {
-            return null;
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_FOUND);
         }
 
         AccountEntity accountEntityFound = accountEntity.get();
@@ -75,7 +83,7 @@ public class AccountRepository implements IAccountRepository {
 
             return InfraAccountMapper.toDomain(jpaAccountRepository.save(accountEntityFound));
         } catch (Exception e) {
-            return null;
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_UPDATED);
         }
 
     }
@@ -86,7 +94,7 @@ public class AccountRepository implements IAccountRepository {
         Optional<AccountEntity> accountEntity = jpaAccountRepository.findActiveAccountByIdAccount(account.getId());
 
         if (accountEntity.isEmpty()) {
-            return null;
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_FOUND);
         }
 
         AccountEntity accountEntityFound = accountEntity.get();
@@ -95,7 +103,7 @@ public class AccountRepository implements IAccountRepository {
             accountEntityFound.setBalance(account.getBalance());
             return InfraAccountMapper.toDomain(jpaAccountRepository.save(accountEntityFound));
         } catch (Exception e) {
-            return null;
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_UPDATED);
         }
     }
 
@@ -104,7 +112,7 @@ public class AccountRepository implements IAccountRepository {
         Optional<AccountEntity> accountEntity = jpaAccountRepository.findById(idAccount);
 
         if (accountEntity.isEmpty()) {
-            return;
+            throw new DevsuException(DevsuException.DevsuError.ACCOUNT_NOT_FOUND);
         }
 
         AccountEntity accountEntityFound = accountEntity.get();
