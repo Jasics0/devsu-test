@@ -1,0 +1,85 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devsu
+      MYSQL_USER: devsu
+      MYSQL_PASSWORD: devsu
+
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - devsu-network
+    container_name: db
+
+  queue:
+    image: rabbitmq:3.9-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - devsu-network
+    container_name: queue
+
+  transactions-service:
+    image: transactions
+    build: 
+      context: ./transactions
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - devsu-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devsu?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=devsu
+      - SPRING_DATASOURCE_PASSWORD=devsu
+      - SPRING_RABBITMQ_HOST=queue
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+    depends_on:
+        - db
+        - queue
+    container_name: transactions-service
+
+  clients-service:
+    image: clients
+    build: 
+      context: ./clients
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - devsu-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devsu?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=devsu
+      - SPRING_DATASOURCE_PASSWORD=devsu
+      - SPRING_RABBITMQ_HOST=queue
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+    depends_on:
+        - db
+        - queue
+        - transactions-service
+    container_name: clients-service
+
+networks:
+  devsu-network:
+    driver: bridge
