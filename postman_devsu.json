@@ -14,7 +14,26 @@
 					"name": "save",
 					"request": {
 						"method": "POST",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idPerson\":\"1006858333\",\r\n    \"name\":\"Javier Charry\",\r\n    \"gender\":\"m\",\r\n    \"age\":21,\r\n    \"address\": \"Villavicencio\",\r\n    \"phone\":\"+573004475862\",\r\n    \"password\":\"devsu\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/clients",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"clients"
+							]
+						}
 					},
 					"response": []
 				},
@@ -22,7 +41,18 @@
 					"name": "get",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/clients/1006858333",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"clients",
+								"1006858333"
+							]
+						}
 					},
 					"response": []
 				},
@@ -33,7 +63,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"idPerson\":\"1006858333\",\r\n    \"name\":\"Javier Charri\"\r\n}",
+							"raw": "{\r\n    \"address\":\"Villavicencio-Meta\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -41,14 +71,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/clients/",
+							"raw": "localhost:8081/clients/1006858333",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"clients",
-								""
+								"1006858333"
 							]
 						}
 					},
@@ -58,7 +88,18 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/clients/1006858331",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"clients",
+								"1006858331"
+							]
+						}
 					},
 					"response": []
 				}
@@ -74,7 +115,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"accountType\":\"corriente\",\r\n    \"balance\":500,\r\n    \"idPerson\":\"2\"\r\n}",
+							"raw": "{\r\n    \"accountType\":\"AHORROS\",\r\n    \"balance\":500,\r\n    \"idPerson\":\"1006858333\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -98,7 +139,18 @@
 					"name": "get",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/accounts/347208",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"accounts",
+								"347208"
+							]
+						}
 					},
 					"response": []
 				},
@@ -106,7 +158,19 @@
 					"name": "getByUser",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/accounts/client/1006858333",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"accounts",
+								"client",
+								"1006858333"
+							]
+						}
 					},
 					"response": []
 				},
@@ -114,7 +178,27 @@
 					"name": "update",
 					"request": {
 						"method": "PUT",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"balance\":1000,\r\n    \"status\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/accounts/993868",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"accounts",
+								"993868"
+							]
+						}
 					},
 					"response": []
 				},
@@ -122,7 +206,18 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/accounts/993868",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"accounts",
+								"993868"
+							]
+						}
 					},
 					"response": []
 				}
@@ -136,6 +231,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAccount\":758117,\r\n    \"amount\":500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "localhost:8082/transactions",
 							"host": [
@@ -153,7 +257,18 @@
 					"name": "get",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/transactions/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"transactions",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -161,7 +276,19 @@
 					"name": "getByAccount",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/transactions/account/758117",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"transactions",
+								"account",
+								"758117"
+							]
+						}
 					},
 					"response": []
 				},
@@ -169,7 +296,19 @@
 					"name": "getByUser",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/transactions/client/1006858333",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"transactions",
+								"client",
+								"1006858333"
+							]
+						}
 					},
 					"response": []
 				},
@@ -177,7 +316,27 @@
 					"name": "update",
 					"request": {
 						"method": "PUT",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"balance\":5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/transactions/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"transactions",
+								"1"
+							]
+						}
 					},
 					"response": []
 				}
@@ -190,7 +349,28 @@
 					"name": "get",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/reports/?range=26/09/2023-27/09/2023&id=1006858333",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"reports",
+								""
+							],
+							"query": [
+								{
+									"key": "range",
+									"value": "26/09/2023-27/09/2023"
+								},
+								{
+									"key": "id",
+									"value": "1006858333"
+								}
+							]
+						}
 					},
 					"response": []
 				}
